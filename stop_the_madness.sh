@@ -1,7 +1,7 @@
 #!/bin/bash
 
-let "STOP_THE_MADNESS_SECONDS=$1 * 1"
-let "START_THE_MADNESS_SECONDS=$2 * 1"
+let "STOP_THE_MADNESS_SECONDS=$1 * 60"
+let "START_THE_MADNESS_SECONDS=$2 * 60"
 let REPEATS=$3
 
 readonly LOCALHOST="127.0.0.1"
@@ -40,11 +40,19 @@ function notifyStartOfMadness() {
   osascript -e "display notification \"Round:$1\" with title \"Starting the madness\" sound name \"Tink\""
 }
 
+function stopTheMadness() {
+  swap_hostnames && notifyEndOfMadness $i && sleep $STOP_THE_MADNESS_SECONDS
+}
+
+function startTheMadness() {
+  swap_hostnames && notifyStartOfMadness $i && sleep $START_THE_MADNESS_SECONDS
+}
+
 function applyDigitalMinimalism() {
   for i in `seq $REPEATS`
   do
-    swap_hostnames && notifyEndOfMadness $i && sleep $STOP_THE_MADNESS_SECONDS
-    swap_hostnames && notifyStartOfMadness $i && sleep $START_THE_MADNESS_SECONDS
+    stopTheMadness
+    startTheMadness
   done
 }
 
